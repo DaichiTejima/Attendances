@@ -11,6 +11,8 @@ import model.entity.EmployeesBean;
 
 public class EmployeesDAO {
 	
+	
+	
 	public List<EmployeesBean> getEmployees(String employee_id, String password) throws ClassNotFoundException, SQLException {
 		
 		List<EmployeesBean> employeesList = new ArrayList<>();
@@ -23,17 +25,20 @@ public class EmployeesDAO {
 			pstmt.setString(1, employee_id);
 			pstmt.setString(2, password);
 			
-			ResultSet res = pstmt.executeQuery();
+			try(ResultSet res = pstmt.executeQuery();) {
 			
-			if (res.next()) {
-				String employeeId = res.getString("employee_id");
-				String passWord = res.getString("password");
-				String name = res.getString("name");
-				int age = res.getInt("age");
-				
-				EmployeesBean employees = new EmployeesBean(employeeId, passWord, name, age);
-				
-				employeesList.add(employees);
+				if (res.next()) {
+					String employeeId = res.getString("employee_id");
+					String passWord = res.getString("password");
+					String name = res.getString("name");
+					int age = res.getInt("age");
+					
+					EmployeesBean employees = new EmployeesBean(employeeId, passWord, name, age);
+					
+					employeesList.add(employees);
+				} else {
+					return null;
+				}
 			}
 		}
 		return employeesList;

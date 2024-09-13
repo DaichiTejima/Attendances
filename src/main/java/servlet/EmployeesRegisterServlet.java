@@ -45,21 +45,46 @@ public class EmployeesRegisterServlet extends HttpServlet {
 		
 		request.setCharacterEncoding("utf-8");
 		
-		String employees_id = request.getParameter("employees_id");
+		String employee_id = request.getParameter("employee_id");
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
-		int age = Integer.parseInt(request.getParameter("age"));
+		String ageStr= request.getParameter("age");
 	
 		EmployeesDAO dao = new EmployeesDAO();
-		
-		try {
-			dao.registerEmployees(employees_id, password, name, age);
-		} catch (ClassNotFoundException | SQLException e) {
-			e.printStackTrace();
-		}
-		
-		RequestDispatcher rd = request.getRequestDispatcher("menu.jsp");
-		rd.forward(request, response);
+		String errorMessage = null;
+		int age = 0;
+		if (employee_id == null || employee_id.isEmpty() ||
+	            password == null || password.isEmpty() ||
+	            name == null || name.isEmpty() ||
+	            ageStr == null || ageStr.isEmpty()) {
+
+	            errorMessage = "全てのフィールドを入力してください。";
+	        } else {
+	            try {
+	                age = Integer.parseInt(ageStr);
+	            } catch (NumberFormatException e) {
+	                errorMessage = "年齢は数字で入力してください。";
+	            }
+	        }
+			
+
+        if (errorMessage == null) {
+			try {
+				int result = dao.registerEmployees(employee_id, password, name, age);
+				
+				if (result > 0) {
+					response.sendRedirect("menu.jsp");
+					return;
+				} 
+				
+			} catch (ClassNotFoundException | SQLException e) {
+				e.printStackTrace();
+				errorMessage = "システムエラーが発生しました。";
+			}
+        }
+				request.setAttribute("errorMessage", errorMessage);
+				RequestDispatcher rd = request.getRequestDispatcher("employees-register.jsp");
+				rd.forward(request, response);
 	}
 
 }

@@ -143,4 +143,69 @@ public class AttendancesDAO {
 		}
 		return count;
 	}
+	
+	public List<AttendancesBean> searchAttendances(Date date) throws ClassNotFoundException, SQLException {
+		
+		List<AttendancesBean> attendancesList = new ArrayList<>();
+		
+		String sql = "SELECT id, employee_id, date, start_time, end_time, break_time, work_time, over_time FROM attendances WHERE date = ?";
+		
+		try (Connection con = ConnectionManager.getConnection();
+			PreparedStatement pstmt = con.prepareStatement(sql)) {
+				
+				pstmt.setDate(1, date);
+				
+				try(ResultSet res = pstmt.executeQuery()) {
+					
+					while (res.next()) {
+						
+						int id = res.getInt("id");
+						String employee_id = res.getString("employee_id");
+						Date attendancesDate = res.getDate("date");
+						Time start_time = res.getTime("start_time");
+						Time end_time = res.getTime("end_time");
+						Time break_time = res.getTime("break_time");
+						Time work_time = res.getTime("work_time");
+						Time over_time = res.getTime("over_time");
+						
+						AttendancesBean attendances = new AttendancesBean(id, employee_id, attendancesDate, start_time, end_time, break_time, work_time, over_time); 
+						attendancesList.add(attendances);
+					}
+				}
+		}
+		return attendancesList;
+		
+	}
+	
+	public List<AttendancesBean> overTimeAttendances(String employee_id) throws ClassNotFoundException, SQLException {
+		
+		List<AttendancesBean> attendancesList = new ArrayList<>();
+		
+		String sql = "SELECT id, employee_id, date, start_time, end_time, break_time, work_time, over_time FROM attendances WHERE employee_id = ?";
+		
+		try(Connection con = ConnectionManager.getConnection();
+			PreparedStatement pstmt = con.prepareStatement(sql)) {
+			
+			pstmt.setString(1, employee_id);
+				
+				try(ResultSet res = pstmt.executeQuery()) {
+					
+					while(res.next()) {
+					
+						int id = res.getInt("id");
+						
+						Date date = res.getDate("date");
+						Time start_time = res.getTime("start_time");
+						Time end_time = res.getTime("end_time");
+						Time break_time = res.getTime("break_time");
+						Time work_time = res.getTime("work_time");
+						Time over_time = res.getTime("over_time");
+						
+						AttendancesBean attendances = new AttendancesBean(id, employee_id, date, start_time, end_time, break_time, work_time, over_time); 
+						attendancesList.add(attendances);
+					}
+				}
+		}
+		return attendancesList;
+	}
 }

@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -11,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.dao.AttendancesDAO;
+import model.entity.AttendancesBean;
 
 /**
  * Servlet implementation class AttendancesDeleteServlet
@@ -41,6 +43,9 @@ public class AttendancesDeleteServlet extends HttpServlet {
 		
 		try {
 			dao.deleteAttendances(id);
+			
+			List<AttendancesBean> attendancesList = dao.getAttendancesList();
+			request.setAttribute("attendancesList", attendancesList);
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}

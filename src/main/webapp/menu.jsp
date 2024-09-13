@@ -19,7 +19,7 @@
 			<form action="attendances-list" method="get">
 				<button type="submit">一覧</button>
 			</form>
-			<form action="attendances-over_time" method="get">
+			<form action="attendances-overTime" method="get">
 				<button type="submit">残業管理</button>
 			</form>
 		</div>

@@ -2,8 +2,8 @@
 <%@page import="java.sql.Time"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
- <%
-		AttendancesBean attendances = (AttendancesBean) request.getAttribute("attendances");
+<%
+	AttendancesBean attendances = (AttendancesBean) request.getAttribute("attendances");
 %>
 <!DOCTYPE html>
 <html>

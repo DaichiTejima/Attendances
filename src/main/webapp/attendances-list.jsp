@@ -3,8 +3,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%
-List<AttendancesBean> attendancesList = (List) request.getAttribute("attendancesList");
-
+List<AttendancesBean> attendancesList = (List<AttendancesBean>) request.getAttribute("attendancesList");
 %>
 <!DOCTYPE html>
 <html>
@@ -48,13 +47,14 @@ List<AttendancesBean> attendancesList = (List) request.getAttribute("attendances
 				}
 			}
 			%>
+			
 		</tbody>
 	</table>
-	<div>
-		<input type="text" name="attendances-search" id="search">
+	<form action="attendances-search" method="get">
+		<label for="date">日付：</label>
+		<input type="date" name="date" id="date" value="<%= request.getParameter("date") %>">
 		<button type="submit">検索</button>
-	</div>
+	</form>
 	<a href="menu.jsp">戻る</a>
-	
 </body>
 </html>

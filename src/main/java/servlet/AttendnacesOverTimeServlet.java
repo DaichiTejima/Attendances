@@ -2,6 +2,7 @@ package servlet;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.RequestDispatcher;
@@ -15,16 +16,16 @@ import model.dao.AttendancesDAO;
 import model.entity.AttendancesBean;
 
 /**
- * Servlet implementation class AttendancesListServlet
+ * Servlet implementation class AttendnacesOverTime
  */
-@WebServlet("/attendances-list")
-public class AttendancesListServlet extends HttpServlet {
+@WebServlet("/attendances-overTime")
+public class AttendnacesOverTimeServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public AttendancesListServlet() {
+    public AttendnacesOverTimeServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,20 +36,24 @@ public class AttendancesListServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 		
-		List<AttendancesBean> attendancesList = null;
+		request.setCharacterEncoding("UTF-8");
+		
+		String employee_id = request.getParameter("employee_id");
 		
 		AttendancesDAO dao = new AttendancesDAO();
 		
+		List<AttendancesBean> attendancesList = new ArrayList<>();
+		
 		try {
-			attendancesList = dao.getAttendancesList();
-			
-		} catch (ClassNotFoundException | SQLException e) {
+			attendancesList = dao.overTimeAttendances(employee_id);
+		} catch(ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
 		}
 		
 		request.setAttribute("attendancesList", attendancesList);
-		RequestDispatcher rd = request.getRequestDispatcher("attendances-list.jsp");
+		RequestDispatcher rd = request.getRequestDispatcher("attendances_overTime.jsp");
 		rd.forward(request, response);
+		
 	}
 
 	/**
@@ -56,9 +61,8 @@ public class AttendancesListServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+
 		doGet(request, response);
 	}
-	
 
 }

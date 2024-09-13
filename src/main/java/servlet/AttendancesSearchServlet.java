@@ -1,6 +1,7 @@
 package servlet;
 
 import java.io.IOException;
+import java.sql.Date;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,20 +13,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import model.dao.EmployeesDAO;
-import model.entity.EmployeesBean;
+import model.dao.AttendancesDAO;
+import model.entity.AttendancesBean;
 
 /**
- * Servlet implementation class MenuServlet
+ * Servlet implementation class AttendancesSearchServlet
  */
-@WebServlet("/menu")
-public class MenuServlet extends HttpServlet {
+@WebServlet("/attendances-search")
+public class AttendancesSearchServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public MenuServlet() {
+    public AttendancesSearchServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -35,42 +36,44 @@ public class MenuServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
+		request.setCharacterEncoding("UTF-8");
 		
+		String attendancesDate = request.getParameter("date");
 		
-		EmployeesDAO dao = new EmployeesDAO();
-		
-		List<EmployeesBean>  employeesList = null;
-		
+		Date date = null;
 		try {
-			String employee_id = request.getParameter("employee_id");
-			String password = request.getParameter("password");
-			if (employee_id != null && password != null) {
-				employeesList = dao.getEmployees(employee_id, password);
-			} else {
-				employeesList = new ArrayList<>();
-			}
-			
-		} catch (ClassNotFoundException | SQLException e) {
-			throw new ServletException(e);
+			date = Date.valueOf(attendancesDate);
+		} catch (IllegalArgumentException e){
+			return;
 		}
 		
-		request.setAttribute("menu", employeesList);
+		AttendancesDAO dao = new AttendancesDAO();
 		
-		RequestDispatcher rd = request.getRequestDispatcher("menu.jsp");
-		rd.forward(request,  response);
+		List<AttendancesBean> attendancesList = new ArrayList<>();
 		
+		try {
+			 attendancesList = dao.searchAttendances(date);
 		
+		} catch(ClassNotFoundException | SQLException e) {
+			e.printStackTrace();
+		}
+			
+		request.setAttribute("attendancesList", attendancesList);
 		
+		RequestDispatcher rd = request.getRequestDispatcher("attendances-search.jsp");
+		rd.forward(request, response);
 	}
+	
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
+		
+		
+		
+		RequestDispatcher rd = request.getRequestDispatcher("attendances-list.jsp");
+		rd.forward(request, response);
 	}
-
 }
-

@@ -41,7 +41,7 @@
  			</div>
  			
 			<button type="submit">登録</button>
-			<a href="menu">戻る</a>
+			<a href="menu.jsp">戻る</a>
  		</form>
 	</div>
 </body>

@@ -3,6 +3,7 @@ package servlet;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.sql.Time;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -26,7 +27,6 @@ public class AttendancesEditServlet extends HttpServlet {
      */
     public AttendancesEditServlet() {
         super();
-        // TODO Auto-generated constructor stub
     }
 
 	/**
@@ -102,6 +102,9 @@ public class AttendancesEditServlet extends HttpServlet {
 		
 		try {
 			dao.editAttendances(id, start_time, end_time, break_time, work_time, over_time);
+			
+			List<AttendancesBean> attendancesList = dao.getAttendancesList();
+			request.setAttribute("attendancesList", attendancesList);
 			
 		} catch (ClassNotFoundException | SQLException e) {
 			e.printStackTrace();
